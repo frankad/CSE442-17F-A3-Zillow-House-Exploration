@@ -1,0 +1,126 @@
+<!DOCTYPE HTML>
+<html xml:lang="en" lang="en">
+<head>
+	<title>CSE442 | A3 Zillow House Exploration</title>
+	<link rel="stylesheet" type="text/css" href="index.css">
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<link href="https://cse442-17s.github.io/style.css" media="all" rel="stylesheet" />
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js" integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E=" crossorigin="anonymous"></script>
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+	<script src="index.js"></script>
+</head>
+
+<body>
+	<div class="content">
+
+		<section class="title">
+			<a href="/">Zillow House Exploration</a>
+		</section>
+
+		<section>
+			<p>
+				<strong>Team Members</strong>: Jeffrey Potasky, Fentahun Reta, Nicholas Rollock, Jianhao Zhou
+			</p>
+		</section>
+
+		<section>
+			<svg class="chart"><image xlink:href="map.png" x="0" y="0"/></svg>
+		</section>
+		<section>
+			<div class="box">
+				Level of detail:
+				<button onclick="swapToState()">State</button>
+				<button onclick="swapToCity()">City</button>
+				<button onclick="swapToZip()">Zipcode</button>
+			</div>
+			<div class="box" id="search_box">
+				<label>Search for city or zip code (Try 98105 or Seattle, WA):</label>
+				<input type="text" id="search_input">
+				<button id="search_submit">Search</button>
+			</div>
+			<div class="box" id="search_result">
+				<div id="close_search_result">X</div>
+				<p>Search Result:</p>
+				<p id="search_result_p"></p>
+			</div>
+			<div class="box">
+				<p id="current_hover"></p>
+			</div>
+			<div class="box">
+				Price Range Filters:<br>
+				<div class="slider_container">
+					<input type="checkBox" class="checkBox" id="boxAll" checked>
+					<label>Median across all homes:</label>
+					<div class="slider" id="sliderAll"></div>
+					<div class="slider_value" id="slider_valueAll">$1k - $500k</div>
+				</div>
+				<div class="slider_container">
+					<input type="checkBox" class="checkBox" id="box1">
+					<label>1 bedroom:</label>
+					<div class="slider" id="slider1"></div>
+					<div class="slider_value" id="slider_value1">$1k - $500k</div>
+				</div>
+				<div class="slider_container">
+					<input type="checkBox" class="checkBox" id="box2">
+					<label>2 bedrooms:</label>
+					<div class="slider" id="slider2"></div>
+					<div class="slider_value" id="slider_value2">$1k - $500k</div>
+				</div>
+				<div class="slider_container">
+					<input type="checkBox" class="checkBox" id="box3">
+					<label>3 bedrooms:</label>
+					<div class="slider" id="slider3"></div>
+					<div class="slider_value" id="slider_value3">$1k - $500k</div>
+				</div>
+				<div class="slider_container">
+					<input type="checkBox" class="checkBox" id="box4">
+					<label>4 bedrooms:</label>
+					<div class="slider" id="slider4"></div>
+					<div class="slider_value" id="slider_value4">$1k - $500k</div>
+				</div>
+				<div class="slider_container">
+					<input type="checkBox" class="checkBox" id="box5">
+					<label>5 or more bedrooms:</label>
+					<div class="slider" id="slider5"></div>
+					<div class="slider_value" id="slider_value5">$1k - $500k</div>
+				</div>
+				<button id="apply_filter">Apply</button>
+			</div>
+		</section>
+
+		<section>
+			<h2>Design Rationale</h2>
+			<p>
+				For our visualization, we began wanting to provide users the ability to explore the median prices of houses in each zipcode. We considered doing a more abstract visualization through chart such as a bar chart or scatter plot, but quickly decided that it would be more intriguing and intuitive to plot the points to a map.
+<br><br>
+After deciding to plot the points relative to their geographic area, we faced the issue that it was hard to parse the areas with clusters of points. We could not rely on filtering alone to solve this issue, as similar geographic regions often have similar economic statuses. Instead two different solutions were proposed: zooming and different granularities of data. Zooming allowed the clusters to remain but be easier to parse as the perceived distance between them increased. However, this restricts viewing to smaller regions. On the other hand, changing the data to be changed between zipcode, city, and state levels effectively grouped clusters into less points while also having the benefit of allowing broader analysis. This too had its faults though as some amount of data was lost by the very nature of grouping. After examining both options, we decided to shift the choice to the user, as they could be a greater judge of which would meet their needs in their given situation. 
+<br><br>
+As we developed our design, we often took inspiration from how we would design the interface if it were to be used by someone looking to purchase a home. As such, we initially allowed users to choose only one category when filtering. While this approach was functional, we realized it did not allow potentially more complex filtering operations one might want when exploring the data outside of the context of home shopping. 
+<br><br>
+This evolution then brought us to decide on how we wanted to color the data points. We experimented with having a different color for each number of filter requirements met by the point, but found it ultimately distracting more from the data than providing revelations about it. Instead we chose to color points that met all requirements black so that they would be immediately apparent while points that missed only one requirement a dark olive green and all others were removed. This allowed the user to get an idea of areas close to satisfying their filter without flooding them with irrelevant points This rationale carried over to our choice of opacity as well; points completely within the filter had absolute opacity so that they would be completely apparent, while points one requirement away only had about half opacity so that they would be visible, but not distracting.
+<br><br>
+The final design decisions we made were to aid in the ease and speed of use of the visualization. Sliders were used instead of number fields because it made it quicker to change the factors of a filter. An area dedicated to information about the point currently selected was used instead of a tooltip because of the number of dimensions that needed to be displayed. A search field was also included to allow for precise probing of the data.
+			</p>
+		</section>
+
+		<section>
+			<h2>Development Process</h2>
+			<p>
+				Development began with a meeting to discuss the overall concept for the visualization and all the features we would possibly want it to have. These features were then prioritized in a list of their importance with the intent when a team member had time to devote to the project they would work on the next most important unimplemented feature. This allowed work to be spread relatively evenly while also accounting for the fact that other obligations made it easier for some members to do the majority of their work in the earlier phases while others had more opportunity to work later on. 
+<br><br>
+To guide development and ensure progress would not become stuck, several project meetings were orchestrated so that members could discuss the current state of the visualization and next steps. Due to project members' schedules video conferences were used to discuss the project. Supplementing these was a project forum where group members could discuss minor issues or comments as they arose.
+<br><br>
+The features that required the most time during development were filtering and zooming, albeit for different reasons. Filtering was one of the primary features of this visualization, so a large amount of effort was spent refining it. Although each iteration by itself was not difficult, there were several refinements and alterations made to it. In contrast, zooming had very few iterations to get it to work successfully, but due to the semi-complex nature of it, each iteration took a large amount of work to complete. 
+<br><br>
+In total, about 40 human-hours were put into this visualization. We hope you enjoy it.
+			</p>
+		</section>
+
+		<div class="footer">
+			<a href="https://cse442-17f.github.io/">CSE 442 Data Visualization</a> -
+			<a href="http://www.washington.edu">University of Washington</a>
+		</div>
+	</div>
+</body>
+</html>

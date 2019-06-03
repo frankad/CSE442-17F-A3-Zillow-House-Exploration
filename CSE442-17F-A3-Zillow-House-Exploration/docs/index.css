@@ -1,0 +1,68 @@
+svg {
+	border: 1px solid black;
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+}
+
+.box {
+	border: 1px solid black;
+	width: 800px;
+	height: auto;
+	overflow: hidden;
+}
+
+.box p {
+	word-break: break-all;
+	white-space: normal;
+}
+
+.slider {
+	margin-top: 5px;
+	float: left;
+	width: 400px;
+}
+
+.slider_container {
+	height: 30px;
+	overflow: hidden;
+}
+
+.slider_container label {
+	margin-top: 2px;
+	width: 200px;
+	float: left;
+}
+.slider_container input {
+	margin-left: 5px;
+	margin-top: 5px;
+	width: 25px;
+	float: left;
+}
+
+.slider_value {
+	margin-left: 30px;
+	width: 130px;
+	float: left;
+}
+
+#search_box {
+
+}
+
+#search_result {
+	display: none;
+}
+
+#close_search_result {
+	border: 1px solid black;
+	height: 20px;
+	width: 20px;
+	float: right;
+	position: relative;
+	margin-top: 10px;
+	margin-right: 10px;
+	text-align: center;
+	font-size: 13pt;
+	cursor: pointer;
+}

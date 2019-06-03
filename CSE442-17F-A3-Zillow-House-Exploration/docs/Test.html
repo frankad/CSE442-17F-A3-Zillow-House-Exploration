@@ -1,0 +1,104 @@
+<html>
+
+<meta charset="utf-8" />
+<head>
+<title>D3 Example</title>
+<style>
+h1 { 
+  font-family: sans-serif;
+  text-align: center;
+}
+
+svg {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid black;
+}
+
+svg text {
+  font-size: 11px;
+  font-family: sans-serif;
+  text-anchor: middle;
+  fill: black;
+}
+
+</style>
+<script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+</head>
+
+<body>
+<h1>D3 Example</h1>
+<svg class="chart"></svg>
+
+<script>
+var chartWidth = 2000;
+        var chartHeight = 1000;
+        /***************
+        * Loading Data *
+        ***************/
+        var allData;  
+        
+        d3.csv("A3TestFile2.csv", function(d, i) {
+          return {
+            long 		: +d.Longitude,
+      	 lat	 		: +d.Latitude,
+        	 zip 			: d.Zipcode,
+            city 		: d.City,
+            county 		: d.County,
+            metro		: d.Metro,
+            state		: d.State,
+            priceAll	: +d.MedianPriceAll,
+            price1 		: +d.MedianPrice1Bed,
+            price2 		: +d.MedianPrice2Bed,
+            price3 		: +d.MedianPrice3Bed,
+            price4 		: +d.MedianPrice4Bed,
+            price5 		: +d.MedianPrice5PlusBed
+        	 };
+        }, function(error, rows) {
+          if (error) {
+            console.log(error);
+          }
+          allData = rows;
+          makeChart(rows);
+        });
+        	
+        /*************
+        * Make Chart *
+        *************/
+            
+        function makeChart(data) {
+          var canvas = d3.select(".chart")
+            .style("width", chartWidth)
+            .style("height", chartHeight);
+                
+          var scatter = d3.select(".chart").selectAll("circle")
+            .data(data);
+                
+          // y pos
+          y = d3.scaleLinear()
+                .domain(d3.extent(allData, function(d) { return d.lat; }))
+                .range([chartHeight * .95, chartHeight * .05]);
+
+          // x pos
+          x = d3.scaleLinear()
+                .domain(d3.extent(allData, function(d) { return d.long; }))
+                .range([chartWidth * .05, chartWidth *.95]);
+               
+          //ENTER
+          var enter = scatter.enter().append("circle")
+            .attr("fill-opacity", 1)
+            .attr("r", 5)
+            .attr("cx", function(d){return x(d.long);})
+            .attr("cy", function(d){return y(d.lat);});
+            
+          // Add Title to point
+          enter.append("svg:title").text(function(d){ return "Zipcode: " + d.zip; });
+                
+                         
+                
+        };
+
+</script>
+</body>
+</html>
